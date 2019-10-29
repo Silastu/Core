@@ -31,8 +31,8 @@ namespace Castle.DynamicProxy.Generators
 		///   Initializes a new instance of the <see cref = "MetaEvent" /> class.
 		/// </summary>
 		/// <param name = "name">The name.</param>
-		/// <param name = "declaringType">Type declaring the original event being overriten, or null.</param>
-		/// <param name = "eventDelegateType"></param>
+		/// <param name = "declaringType">Type declaring the original event being overridden, or null.</param>
+		/// <param name = "eventDelegateType">The event delegate type.</param>
 		/// <param name = "adder">The add method.</param>
 		/// <param name = "remover">The remove method.</param>
 		/// <param name = "attributes">The attributes.</param>

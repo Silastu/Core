@@ -16,12 +16,15 @@ namespace Castle.DynamicProxy.Generators.Emitters
 {
 	using System;
 	using System.Collections.Generic;
+	using System.Diagnostics;
 	using System.Reflection;
 	using System.Reflection.Emit;
 
+	using Castle.DynamicProxy.Internal;
+
 	public class ClassEmitter : AbstractTypeEmitter
 	{
-		private const TypeAttributes DefaultAttributes =
+		internal const TypeAttributes DefaultAttributes =
 			TypeAttributes.Public | TypeAttributes.Class | TypeAttributes.Serializable;
 
 		private readonly ModuleScope moduleScope;
@@ -48,7 +51,14 @@ namespace Castle.DynamicProxy.Generators.Emitters
 			{
 				foreach (var inter in interfaces)
 				{
-					TypeBuilder.AddInterfaceImplementation(inter);
+					if (inter.GetTypeInfo().IsInterface)
+					{
+						TypeBuilder.AddInterfaceImplementation(inter);
+					}
+					else
+					{
+						Debug.Assert(inter.IsDelegateType());
+					}
 				}
 			}
 
@@ -64,6 +74,11 @@ namespace Castle.DynamicProxy.Generators.Emitters
 		public ModuleScope ModuleScope
 		{
 			get { return moduleScope; }
+		}
+
+		internal bool InStrongNamedModule
+		{
+			get { return StrongNameUtil.IsAssemblySigned(TypeBuilder.Assembly); }
 		}
 
 		protected virtual IEnumerable<Type> InitializeGenericArgumentsFromBases(ref Type baseType,
